@@ -1,13 +1,11 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic\Test\Dom;
 
 use Prismic\Test\TestCase;
 use Prismic\Dom\Date;
-use \DateTime;
-use \DateTimeZone;
-
+use DateTime;
+use DateTimeZone;
 class DateTest extends TestCase
 {
     public function testDateAsDate()
@@ -17,7 +15,6 @@ class DateTest extends TestCase
         $actual = Date::asDate($date);
         $this->assertEquals($expected, $actual);
     }
-
     public function testTimestampAsDate()
     {
         $timestamp = '2017-02-17T12:30:00+0000';

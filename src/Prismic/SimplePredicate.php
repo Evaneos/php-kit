@@ -1,36 +1,30 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic;
 
 class SimplePredicate implements Predicate
 {
-
     /** @var string  */
     private $name;
-
     /** @var string  */
     private $fragment;
-
     /** @var array  */
     private $args;
-
     /**
      * @param string $name
      * @param string $fragment
      * @param array  $args
      */
-    public function __construct(string $name, string $fragment, array $args = [])
+    public function __construct($name, $fragment, array $args = [])
     {
         $this->name = $name;
         $this->fragment = $fragment;
         $this->args = $args;
     }
-
     /**
      * @return string
      */
-    public function q() : string
+    public function q()
     {
         $query = "[:d = " . $this->name . "(";
         if ($this->name === "similar") {
@@ -44,13 +38,12 @@ class SimplePredicate implements Predicate
         $query .= ")]";
         return $query;
     }
-
     /**
      * @param mixed $value
      *
      * @return string
      */
-    private static function serializeField($value) : string
+    private static function serializeField($value)
     {
         if (is_string($value)) {
             return "\"" . $value . "\"";
@@ -62,6 +55,6 @@ class SimplePredicate implements Predicate
             }
             return "[" . implode(", ", $str_array) . "]";
         }
-        return (string)$value;
+        return (string) $value;
     }
 }

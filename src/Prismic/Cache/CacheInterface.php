@@ -27,7 +27,6 @@ interface CacheInterface
      * @return boolean true if the cache has a value for this key, otherwise false
      */
     public function has($key);
-
     /**
      * Returns the value of a cache entry from its key
      *
@@ -36,7 +35,6 @@ interface CacheInterface
      * @return mixed the value of the entry, as it was passed to CacheInterface::set, null if not present in cache
      */
     public function get($key);
-
     /**
      * Stores a new cache entry
      *
@@ -46,7 +44,6 @@ interface CacheInterface
      * @return void
      */
     public function set($key, $value, $ttl = 0);
-
     /**
      * Deletes a cache entry, from its key
      *
@@ -54,7 +51,6 @@ interface CacheInterface
      * @return void
      */
     public function delete($key);
-
     /**
      * Clears the whole cache
      *

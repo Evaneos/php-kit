@@ -18,7 +18,6 @@ class ApcCache implements CacheInterface
     {
         return \apcu_exists($key);
     }
-
     /**
      * Returns the value of a cache entry from its key
      *
@@ -28,12 +27,11 @@ class ApcCache implements CacheInterface
     public function get($key)
     {
         $value = \apcu_fetch($key, $success);
-        if (! $success) {
+        if (!$success) {
             return null;
         }
         return $value;
     }
-
     /**
      * Stores a new cache entry
      *
@@ -46,7 +44,6 @@ class ApcCache implements CacheInterface
     {
         \apcu_store($key, $value, $ttl);
     }
-
     /**
      * Deletes a cache entry, from its key
      *
@@ -57,7 +54,6 @@ class ApcCache implements CacheInterface
     {
         \apcu_delete($key);
     }
-
     /**
      * Clears the whole cache
      *

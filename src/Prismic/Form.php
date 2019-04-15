@@ -1,10 +1,8 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic;
 
 use stdClass;
-
 /**
  * Embodies a RESTful form. This is meant for internal use.
  */
@@ -16,42 +14,36 @@ class Form
      * @var string|null
      */
     private $name;
-
     /**
      * Form Method
      *
      * @var string
      */
     private $method;
-
     /**
      * The rel if there's one
      *
      * @var string|null
      */
     private $rel;
-
     /**
      * Encoding type
      *
      * @var string
      */
     private $enctype;
-
     /**
      * Form Action/URL
      *
      * @var string
      */
     private $action;
-
     /**
      * The list of Prismic\FieldForm objects that can be used
      *
      * @var FieldForm[]
      */
     private $fields;
-
     /**
      * Constructs the Form object.
      *
@@ -62,28 +54,21 @@ class Form
      * @param string $action    the action
      * @param array  $fields    the list of Prismic::FieldForm objects that can be used
      */
-    private function __construct(
-        ?string $name = null,
-        string  $method,
-        ?string $rel = null,
-        string  $enctype,
-        string  $action,
-        array   $fields
-    ) {
-        $this->name    = $name;
-        $this->method  = $method;
-        $this->rel     = $rel;
+    private function __construct($name = null, $method, $rel = null, $enctype, $action, array $fields)
+    {
+        $this->name = $name;
+        $this->method = $method;
+        $this->rel = $rel;
         $this->enctype = $enctype;
-        $this->action  = $action;
-        $this->fields  = $fields;
+        $this->action = $action;
+        $this->fields = $fields;
     }
-
     /**
      * Initializes the data that will be sent as the API call to a default value.
      *
      * @return array the array of arguments that will be passed
      */
-    public function defaultData() : array
+    public function defaultData()
     {
         /**
          * @var string    $key
@@ -99,101 +84,81 @@ class Form
                 $dft[$key] = $default;
             }
         }
-
         return $dft;
     }
-
     /**
      * Return a new instance from a JSON string
      * @param string $json
      * @return self
      */
-    public static function withJsonString(string $json) : self
+    public static function withJsonString($json)
     {
         $data = \json_decode($json);
         return self::withJsonObject($data);
     }
-
     /**
      * Return a new instance from unserialized JSON
      * @param stdClass $json
      * @return self
      */
-    public static function withJsonObject(stdClass $json) : self
+    public static function withJsonObject(stdClass $json)
     {
         $fields = [];
         foreach ($json->fields as $name => $field) {
-            $default  = isset($field->default) ? $field->default : null;
+            $default = isset($field->default) ? $field->default : null;
             $multiple = isset($field->multiple) ? $field->multiple : false;
             $fields[$name] = new FieldForm($field->type, $multiple, $default);
         }
-
-        return new self(
-            isset($json->name) ? $json->name : null,
-            $json->method,
-            isset($json->rel) ? $json->rel : null,
-            $json->enctype,
-            $json->action,
-            $fields
-        );
+        return new self(isset($json->name) ? $json->name : null, $json->method, isset($json->rel) ? $json->rel : null, $json->enctype, $json->action, $fields);
     }
-
     /**
      * Returns the name
      */
-    public function getName() :? string
+    public function getName()
     {
         return $this->name;
     }
-
     /**
      * Returns the method
      */
-    public function getMethod() : string
+    public function getMethod()
     {
         return $this->method;
     }
-
     /**
      * Returns the rel
      */
-    public function getRel() :? string
+    public function getRel()
     {
         return $this->rel;
     }
-
     /**
      * Returns the enctype
      */
-    public function getEnctype() : string
+    public function getEnctype()
     {
         return $this->enctype;
     }
-
     /**
      * Returns the action
      */
-    public function getAction() : string
+    public function getAction()
     {
         return $this->action;
     }
-
     /**
      * Returns the fields
      * @return FieldForm[]
      */
-    public function getFields() : array
+    public function getFields()
     {
         return $this->fields;
     }
-
     /**
      * Return a single field by name
      */
-    public function getField(string $name) :? FieldForm
+    public function getField($name)
     {
-        return isset($this->fields[$name])
-               ? $this->fields[$name]
-               : null;
+        return isset($this->fields[$name]) ? $this->fields[$name] : null;
     }
 }

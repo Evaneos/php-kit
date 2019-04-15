@@ -1,18 +1,15 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\LinkResolver;
-
 class FakeLinkResolver extends LinkResolver
 {
-    public function resolve($link) :? string
+    public function resolve($link)
     {
         if ($link->isBroken) {
             return 'http://host/404';
         }
-
-        return 'http://host/doc/'.$link->id;
+        return 'http://host/doc/' . $link->id;
     }
 }

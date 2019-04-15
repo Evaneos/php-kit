@@ -3,7 +3,6 @@
 namespace Prismic\Dom;
 
 use Prismic\Dom\BlockGroup;
-
 /**
  * This class embodies a RichText fragment.
  *
@@ -25,16 +24,13 @@ class RichText
     public static function asText($richText)
     {
         $result = '';
-
         foreach ($richText as $block) {
             if (isset($block->text)) {
                 $result .= $block->text . "\n";
             }
         }
-
         return $result;
     }
-
     /**
      * Builds a HTML version of the RichText fragment
      *
@@ -48,7 +44,6 @@ class RichText
     public static function asHtml($richText, $linkResolver = null, $htmlSerializer = null)
     {
         $groups = [];
-
         foreach ($richText as $block) {
             $count = count($groups);
             if ($count > 0) {
@@ -85,9 +80,7 @@ class RichText
                 array_push($groups, $newBlockGroup);
             }
         }
-
         $html = '';
-
         foreach ($groups as $group) {
             $maybeTag = $group->getTag();
             if ($maybeTag) {
@@ -102,10 +95,8 @@ class RichText
                 }
             }
         }
-
         return $html;
     }
-
     /**
      * Transforms a block into HTML
      *
@@ -119,24 +110,11 @@ class RichText
     private static function asHtmlBlock($block, $linkResolver = null, $htmlSerializer = null)
     {
         $content = '';
-
-        if ($block->type === 'heading1' ||
-            $block->type === 'heading2' ||
-            $block->type === 'heading3' ||
-            $block->type === 'heading4' ||
-            $block->type === 'heading5' ||
-            $block->type === 'heading6' ||
-            $block->type === 'paragraph' ||
-            $block->type === 'list-item' ||
-            $block->type === 'o-list-item' ||
-            $block->type === 'preformatted'
-        ) {
+        if ($block->type === 'heading1' || $block->type === 'heading2' || $block->type === 'heading3' || $block->type === 'heading4' || $block->type === 'heading5' || $block->type === 'heading6' || $block->type === 'paragraph' || $block->type === 'list-item' || $block->type === 'o-list-item' || $block->type === 'preformatted') {
             $content = RichText::insertSpans($block->text, $block->spans, $linkResolver, $htmlSerializer);
         }
-
         return RichText::serialize($block, $content, $linkResolver, $htmlSerializer);
     }
-
     /**
      * Transforms a text block into HTML
      *
@@ -153,35 +131,30 @@ class RichText
         if (empty($spans)) {
             return htmlentities($text, null, 'UTF-8');
         }
-
         $tagsStart = [];
         $tagsEnd = [];
-
         foreach ($spans as $span) {
-            if (! array_key_exists($span->start, $tagsStart)) {
+            if (!array_key_exists($span->start, $tagsStart)) {
                 $tagsStart[$span->start] = [];
             }
-            if (! array_key_exists($span->end, $tagsEnd)) {
+            if (!array_key_exists($span->end, $tagsEnd)) {
                 $tagsEnd[$span->end] = [];
             }
             array_push($tagsStart[$span->start], $span);
             array_push($tagsEnd[$span->end], $span);
         }
-
         $c = null;
         $html = '';
         $stack = [];
-
-        for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) { // Looping to length + 1 to catch closing tags
+        for ($pos = 0, $len = strlen($text) + 1; $pos < $len; $pos++) {
+            // Looping to length + 1 to catch closing tags
             if (array_key_exists($pos, $tagsEnd)) {
                 foreach ($tagsEnd[$pos] as $endTag) {
                     // Close a tag
                     $tag = array_pop($stack);
                     // Continue only if block contains content.
                     if ($tag && $tag['span']) {
-                        $innerHtml = trim(
-                            RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer)
-                        );
+                        $innerHtml = trim(RichText::serialize($tag['span'], $tag['text'], $linkResolver, $htmlSerializer));
                         if (count($stack) == 0) {
                             // The tag was top level
                             $html .= $innerHtml;
@@ -198,15 +171,12 @@ class RichText
                 // Sort bigger tags first to ensure the right tag hierarchy
                 $sspans = $tagsStart[$pos];
                 $spanSort = function ($a, $b) {
-                    return ($b->end - $b->start) - ($a->end - $a->start);
+                    return $b->end - $b->start - ($a->end - $a->start);
                 };
                 usort($sspans, $spanSort);
                 foreach ($sspans as $span) {
                     // Open a tag
-                    array_push($stack, [
-                        'span' => $span,
-                        'text' => ''
-                    ]);
+                    array_push($stack, ['span' => $span, 'text' => '']);
                 }
             }
             if ($pos < strlen($text)) {
@@ -218,17 +188,12 @@ class RichText
                     // Inner text of a span
                     $last_idx = count($stack) - 1;
                     $last = $stack[$last_idx];
-                    $stack[$last_idx] = [
-                        'span' => $last['span'],
-                        'text' => $last['text'] . htmlentities($c, null, 'UTF-8')
-                    ];
+                    $stack[$last_idx] = ['span' => $last['span'], 'text' => $last['text'] . htmlentities($c, null, 'UTF-8')];
                 }
             }
         }
-
         return $html;
     }
-
     /**
      * Transforms an element into HTML
      *
@@ -240,7 +205,7 @@ class RichText
      *
      * @return string the HTML representation of the element
      */
-    private static function serialize($element, $content, $linkResolver, $htmlSerializer) : string
+    private static function serialize($element, $content, $linkResolver, $htmlSerializer)
     {
         if ($htmlSerializer) {
             $custom = $htmlSerializer($element, $content);
@@ -248,13 +213,10 @@ class RichText
                 return $custom;
             }
         }
-
         $classCode = '';
-
         if (isset($element->label)) {
             $classCode = ' class="' . $element->label . '"';
         }
-
         // Blocks
         switch ($element->type) {
             case 'heading1':
@@ -277,28 +239,17 @@ class RichText
             case 'o-list-item':
                 return nl2br('<li' . $classCode . '>' . $content . '</li>');
             case 'image':
-                return (
-                    '<p class="block-img' . (isset($element->label) ? (' ' . $element->label) : '') . '">' .
-                        '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' .
-                    '</p>'
-                );
+                return '<p class="block-img' . (isset($element->label) ? ' ' . $element->label : '') . '">' . '<img src="' . $element->url . '" alt="' . htmlentities($element->alt) . '">' . '</p>';
             case 'embed':
                 $providerAttr = '';
                 if ($element->oembed->provider_name) {
                     $providerAttr = ' data-oembed-provider="' . strtolower($element->oembed->provider_name) . '"';
                 }
                 if ($element->oembed->html) {
-                    return sprintf(
-                        '<div data-oembed="%s" data-oembed-type="%s"%s>%s</div>',
-                        $element->oembed->embed_url,
-                        strtolower($element->oembed->type),
-                        $providerAttr,
-                        $element->oembed->html
-                    );
+                    return sprintf('<div data-oembed="%s" data-oembed-type="%s"%s>%s</div>', $element->oembed->embed_url, strtolower($element->oembed->type), $providerAttr, $element->oembed->html);
                 }
                 return '';
         }
-
         // Spans
         $attributes = [];
         switch ($element->type) {
@@ -311,10 +262,7 @@ class RichText
             case 'hyperlink':
                 $nodeName = 'a';
                 if (isset($element->data->target)) {
-                    $attributes = array_merge([
-                        'target' => $element->data->target,
-                        'rel' => 'noopener',
-                    ], $attributes);
+                    $attributes = array_merge(['target' => $element->data->target, 'rel' => 'noopener'], $attributes);
                 }
                 if ($element->data->link_type === 'Document') {
                     $attributes['href'] = $linkResolver ? $linkResolver($element->data) : '';
@@ -331,19 +279,16 @@ class RichText
                 // throw new \Exception("Unknown span type " . get_class($span));
                 $nodeName = 'span';
         }
-
         if (isset($element->label)) {
             $attributes['class'] = $element->label;
         } elseif (isset($element->data->label)) {
             $attributes['class'] = $element->data->label;
         }
-
         $html = '<' . $nodeName;
         foreach ($attributes as $k => $v) {
-            $html .= (' ' . $k . '="' . $v . '"');
+            $html .= ' ' . $k . '="' . $v . '"';
         }
-        $html .= ('>' . $content . '</' . $nodeName . '>');
-
+        $html .= '>' . $content . '</' . $nodeName . '>';
         return $html;
     }
 }

@@ -20,7 +20,6 @@ class Link
         if ($link->link_type === 'Document') {
             return $linkResolver ? $linkResolver($link) : null;
         }
-
         return property_exists($link, 'url') ? $link->url : null;
     }
 }

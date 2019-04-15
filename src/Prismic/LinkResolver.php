@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic;
 
@@ -27,8 +26,7 @@ abstract class LinkResolver
      *
      * @return string|null The URL of the link
      */
-    abstract public function resolve($link) :? string;
-
+    public abstract function resolve($link);
     /**
      * What happens when the link resolver gets called.
      *
@@ -37,7 +35,7 @@ abstract class LinkResolver
      *
      * @return string|null The URL of the link
      */
-    public function __invoke($link) :? string
+    public function __invoke($link)
     {
         return $this->resolve($link);
     }

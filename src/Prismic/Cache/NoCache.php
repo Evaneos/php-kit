@@ -21,7 +21,6 @@ class NoCache implements CacheInterface
     {
         return false;
     }
-
     /**
      * Returns the value of a cache entry from its key
      *
@@ -32,7 +31,6 @@ class NoCache implements CacheInterface
     {
         return null;
     }
-
     /**
      * Stores a new cache entry
      *
@@ -44,7 +42,6 @@ class NoCache implements CacheInterface
     public function set($key, $value, $ttl = null)
     {
     }
-
     /**
      * Deletes a cache entry, from its key
      *
@@ -54,7 +51,6 @@ class NoCache implements CacheInterface
     public function delete($key)
     {
     }
-
     /**
      * Clears the whole cache
      *

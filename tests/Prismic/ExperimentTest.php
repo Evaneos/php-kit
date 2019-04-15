@@ -1,20 +1,16 @@
 <?php
-declare(strict_types=1);
 
 namespace Prismic\Test;
 
 use Prismic\Experiments;
-
 class ExperimentTest extends TestCase
 {
     private $experiments;
-
     protected function setUp()
     {
         $experimentsJson = \json_decode($this->getJsonFixture('experiments.json'));
         $this->experiments = Experiments::parse($experimentsJson);
     }
-
     public function testParsing()
     {
         $running = $this->experiments->getRunning();
@@ -22,14 +18,12 @@ class ExperimentTest extends TestCase
         $this->assertEquals("VDUBBawGAKoGelsX", $exp1->getId());
         $this->assertEquals("_UQtin7EQAOH5M34RQq6Dg", $exp1->getGoogleId());
         $this->assertEquals("Exp 1", $exp1->getName());
-
         $variations = $exp1->getVariations();
         $base = $variations[0];
         $this->assertEquals("VDUBBawGAKoGelsZ", $base->getId());
         $this->assertEquals("Base", $base->getLabel());
         $this->assertEquals("VDUBBawGALAGelsa", $base->getRef());
     }
-
     public function testCookieParsing()
     {
         $this->assertNull($this->experiments->refFromCookie(""), "Empty cookie");

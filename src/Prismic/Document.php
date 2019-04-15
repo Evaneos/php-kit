@@ -21,7 +21,6 @@ class Document
                 return $language;
             }
         }
-
         return null;
     }
 }

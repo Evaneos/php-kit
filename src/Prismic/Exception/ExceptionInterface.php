@@ -2,6 +2,6 @@
 
 namespace Prismic\Exception;
 
-interface ExceptionInterface extends \Throwable
+interface ExceptionInterface
 {
 }
